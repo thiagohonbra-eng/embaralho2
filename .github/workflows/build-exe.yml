@@ -1,0 +1,32 @@
+yaml
+name: Build EXE
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "embaralhador_musicas.py"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Baixar o código do repositório
+        uses: actions/checkout@v4
+
+      - name: Instalar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar o PyInstaller
+        run: pip install pyinstaller
+
+      - name: Gerar o executável
+        run: pyinstaller --onefile --windowed embaralhador_musicas.py
+
+      - name: Disponibilizar o .exe para download
+        uses: actions/upload-artifact@v4
+        with:
+          name: embaralhador_musicas-exe
+          path: dist/embaralhador_musicas.exe
